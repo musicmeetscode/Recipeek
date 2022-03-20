@@ -8,9 +8,9 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import ug.global.recipeek.R
-import ug.global.recipeek.db.Recipe
+import ug.global.recipeek.db.RecipeWithIngredients
 
-class RecipesAdapter(var recipes: ArrayList<Recipe>, var context: Context) : RecyclerView.Adapter<RecipesAdapter.ViewHolder>() {
+class RecipesAdapter(var recipes: ArrayList<RecipeWithIngredients>, var context: Context) : RecyclerView.Adapter<RecipesAdapter.ViewHolder>() {
     var filteredRecipes = recipes
 
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {

@@ -4,4 +4,6 @@
     <string name="online_image">Online Image</string>
     <string name="add_recipe">Add Recipe</string>
     <string name="recipe_photo">REcipe photo</string>
+    <string name="empty">Recipeek seems desserted 👻 ...for now..... \nCreate your first recipee to make this go away .. for ever!! 🍳</string>
+    <string name="image_for_empty_recipees">IMage for empty recipees</string>
 </resources>

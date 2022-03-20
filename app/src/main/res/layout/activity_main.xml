@@ -18,6 +18,7 @@
         tools:layout_editor_absoluteX="16dp">
 
         <androidx.appcompat.widget.SearchView
+            android:id="@+id/search"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
     </com.google.android.material.card.MaterialCardView>
@@ -57,6 +58,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginVertical="12dp"
+        android:scrollbars="none"
         app:layout_constraintEnd_toEndOf="@+id/materialCardView"
         app:layout_constraintStart_toStartOf="@+id/materialCardView"
         app:layout_constraintTop_toBottomOf="@id/materialCardView">
@@ -92,4 +94,30 @@
         app:layout_constraintEnd_toEndOf="@+id/horizontalScrollView"
         app:layout_constraintStart_toStartOf="@+id/horizontalScrollView"
         app:layout_constraintTop_toBottomOf="@+id/horizontalScrollView" />
+
+    <ImageView
+        android:id="@+id/emptyImage"
+        android:layout_width="300dp"
+        android:layout_height="300dp"
+        android:contentDescription="@string/image_for_empty_recipees"
+        android:visibility="gone"
+        app:layout_constraintBottom_toTopOf="@+id/floatingActionButton"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/materialCardView"
+        app:srcCompat="@drawable/ic_undraw_handcrafts_city" />
+
+    <TextView
+        android:id="@+id/emptyText"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_margin="12dp"
+        android:gravity="center"
+        android:text="@string/empty"
+        android:textSize="20sp"
+        android:visibility="gone"
+        app:layout_constraintBottom_toTopOf="@+id/emptyImage"
+        app:layout_constraintEnd_toEndOf="@+id/recycler_view"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/materialCardView" />
 </androidx.constraintlayout.widget.ConstraintLayout>
