@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">Recipeek</string>
+    <string name="custom_and_online_recipes">custom and online recipes ..</string>
+    <string name="online_image">Online Image</string>
+    <string name="add_recipe">Add Recipe</string>
+    <string name="recipe_photo">REcipe photo</string>
+</resources>
