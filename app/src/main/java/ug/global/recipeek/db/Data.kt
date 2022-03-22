@@ -5,7 +5,7 @@ import androidx.room.*
 
 @Entity
 data class Ingredient(
-    @ColumnInfo var name: String, @ColumnInfo var amount: String, @ColumnInfo var scale: String,
+    @ColumnInfo var name: String, @ColumnInfo var amount: Int, @ColumnInfo var scale: String,
 ) {
     @PrimaryKey(autoGenerate = true)
     var id: Int = 0
@@ -17,10 +17,12 @@ data class Recipe(
     @ColumnInfo var cookTime: Int,
     @ColumnInfo var prepTime: Int,
     @ColumnInfo var instructions: String,
+    @ColumnInfo(defaultValue = "") var cooking: String,
     @ColumnInfo var photo: String?,
     @ColumnInfo var type: String,
     @ColumnInfo var calories: Double,
     @ColumnInfo var serves: Int,
+    @ColumnInfo(defaultValue = "false") var favorite: Boolean = false,
 ) {
     @PrimaryKey(autoGenerate = true)
     var id: Int = 0
@@ -40,9 +42,19 @@ interface DataDao {
     @Transaction
     @Query("SELECT * FROM recipe")
     fun getRecipes(): List<RecipeWithIngredients>
+
+    @Insert
+    fun insertRecipe(recipe: Recipe)
+
+    @Insert
+    fun insertIngredients(ingredients: List<Ingredient>)
 }
 
-@Database(entities = [Recipe::class, Ingredient::class], version = 1, exportSchema = true)
+@Database(entities = [Recipe::class, Ingredient::class], version = 4, exportSchema = true, autoMigrations = [
+    AutoMigration(from = 1, to = 2),
+    AutoMigration(from = 2, to = 3),
+    AutoMigration(from = 3, to = 4)
+])
 abstract class AppDatabase : RoomDatabase() {
     abstract fun dao(): DataDao
 

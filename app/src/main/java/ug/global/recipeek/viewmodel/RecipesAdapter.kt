@@ -1,5 +1,6 @@
 package ug.global.recipeek.viewmodel
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
@@ -25,8 +26,12 @@ class RecipesAdapter(var recipes: ArrayList<RecipeWithIngredients>, var context:
         return ViewHolder(LayoutInflater.from(context).inflate(R.layout.recipe_layout, parent, false))
     }
 
+    @SuppressLint("SetTextI18n")
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-//        TODO("Not yet implemented")
+        val (recipe, ingredients) = recipes[position]
+        holder.name.text = recipe.name
+        holder.calories.text = "${recipe.calories} Cal"
+        holder.ingredients.text = ingredients[0].name
     }
 
     override fun getItemCount(): Int {
