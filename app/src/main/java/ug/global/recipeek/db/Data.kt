@@ -2,11 +2,12 @@ package ug.global.recipeek.db
 
 import android.content.Context
 import androidx.room.*
+import java.io.Serializable
 
 @Entity
 data class Ingredient(
-    @ColumnInfo var name: String, @ColumnInfo var amount: Int, @ColumnInfo var scale: String,
-) {
+    @ColumnInfo var name: String, @ColumnInfo var amount: Int, @ColumnInfo var scale: String, @ColumnInfo(defaultValue = "0") var recipeId: Int,
+) : Serializable {
     @PrimaryKey(autoGenerate = true)
     var id: Int = 0
 }
@@ -23,7 +24,7 @@ data class Recipe(
     @ColumnInfo var calories: Double,
     @ColumnInfo var serves: Int,
     @ColumnInfo(defaultValue = "false") var favorite: Boolean = false,
-) {
+) : Serializable {
     @PrimaryKey(autoGenerate = true)
     var id: Int = 0
 }
@@ -32,10 +33,10 @@ data class RecipeWithIngredients(
     @Embedded val recipe: Recipe,
     @Relation(
         parentColumn = "id",
-        entityColumn = "id"
+        entityColumn = "recipeId"
     )
     val ingredients: List<Ingredient>,
-)
+) : Serializable
 
 @Dao
 interface DataDao {
@@ -46,14 +47,25 @@ interface DataDao {
     @Insert
     fun insertRecipe(recipe: Recipe)
 
+    @Query("SELECT MAX(id) FROM recipe")
+    fun getLastId(): Int
+
     @Insert
     fun insertIngredients(ingredients: List<Ingredient>)
+
+    @Update
+    fun updateRecipe(recipe: Recipe)
+
+    @Update
+    fun updateIngredient(ingredient: Ingredient)
 }
 
-@Database(entities = [Recipe::class, Ingredient::class], version = 4, exportSchema = true, autoMigrations = [
+@Database(entities = [Recipe::class, Ingredient::class], version = 5, exportSchema = true, autoMigrations = [
     AutoMigration(from = 1, to = 2),
     AutoMigration(from = 2, to = 3),
-    AutoMigration(from = 3, to = 4)
+    AutoMigration(from = 3, to = 4),
+    AutoMigration(from = 4, to = 5)
+
 ])
 abstract class AppDatabase : RoomDatabase() {
     abstract fun dao(): DataDao
@@ -69,4 +81,8 @@ abstract class AppDatabase : RoomDatabase() {
             return instance as AppDatabase
         }
     }
+}
+
+interface RecipeCAllBacks {
+    fun recipeModified(recipe: RecipeWithIngredients)
 }

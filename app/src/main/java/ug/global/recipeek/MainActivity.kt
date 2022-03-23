@@ -14,20 +14,23 @@ import ug.global.recipeek.databinding.ActivityMainBinding
 import ug.global.recipeek.databinding.AddIngredientBinding
 import ug.global.recipeek.databinding.AddRecipeBinding
 import ug.global.recipeek.databinding.FoodTypeBinding
-import ug.global.recipeek.db.AppDatabase
-import ug.global.recipeek.db.Ingredient
-import ug.global.recipeek.db.Recipe
-import ug.global.recipeek.db.RecipeWithIngredients
+import ug.global.recipeek.db.*
 import ug.global.recipeek.viewmodel.AppViewModel
 import ug.global.recipeek.viewmodel.RecipesAdapter
 import ug.musicmeetscode.appexecutors.AppExecutors
 
-class MainActivity : AppCompatActivity() {
-    lateinit var mainBinding: ActivityMainBinding
+class MainActivity : AppCompatActivity(), RecipeCAllBacks {
+    private lateinit var mainBinding: ActivityMainBinding
+    private var newId = 0
 
     @SuppressLint("InflateParams", "NotifyDataSetChanged", "SetTextI18n")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        val dialog = BottomSheetDialog(this)
+        AppExecutors.instance?.diskIO()?.execute {
+            newId = AppDatabase.getInstance(this).dao().getLastId()
+        }
+        val dialogView = AddRecipeBinding.inflate(layoutInflater)
         mainBinding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(mainBinding.root)
         val items = arrayOf("All", "Salad", "Dessert", "Cake", "Breakfast", "Dinner", "Juice", "Drinks")
@@ -55,8 +58,6 @@ class MainActivity : AppCompatActivity() {
         }
         mainBinding.floatingActionButton.setOnClickListener {
             val ingredients = arrayListOf<Ingredient>()
-            val dialog = BottomSheetDialog(this)
-            val dialogView = AddRecipeBinding.inflate(layoutInflater)
             dialog.setContentView(dialogView.root)
             dialogView.addIngredient.setOnClickListener {
                 val ingredientAlert = MaterialAlertDialogBuilder(this).create()
@@ -66,7 +67,7 @@ class MainActivity : AppCompatActivity() {
                 ingredientAlert.setButton(BUTTON_POSITIVE, "SAve"
                 ) { _, _ ->
                     val ingredient = Ingredient(ingredientBinding.igredient.editableText.toString(), ingredientBinding.amount.editableText.toString()
-                        .toInt(), ingredientBinding.unit.editableText.toString())
+                        .toInt(), ingredientBinding.unit.editableText.toString(), newId)
                     ingredients.add(ingredient)
                     val chip = FoodTypeBinding.inflate(layoutInflater).root
                     chip.text = "${ingredient.name}- ${ingredient.amount}${ingredient.scale}"
@@ -101,6 +102,15 @@ class MainActivity : AppCompatActivity() {
                 ingredientAlert.show()
             }
             dialog.show()
+        }
+    }
+
+    override fun recipeModified(recipe: RecipeWithIngredients) {
+        AppExecutors.instance?.diskIO()?.execute {
+            AppDatabase.getInstance(this).dao().updateRecipe(recipe.recipe)
+            recipe.ingredients.forEach {
+                AppDatabase.getInstance(this).dao().updateIngredient(it)
+            }
         }
     }
 }
