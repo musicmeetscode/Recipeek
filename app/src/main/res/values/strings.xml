@@ -32,4 +32,7 @@
     <string name="min">min</string>
     <string name="prep_tim">Prep Time</string>
     <string name="start_cooking">Start Cooking</string>
+    <string name="recipe_image">Recipe Image</string>
+    <string name="edit">Edit</string>
+    <string name="channel_description">Recipe cooking notifications</string>
 </resources>

@@ -36,12 +36,17 @@ class RecipesAdapter(var recipes: ArrayList<RecipeWithIngredients>, var context:
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val recipe = recipes[position]
         holder.name.text = recipe.recipe.name
-        holder.calories.text = "${recipe.recipe.calories} Cal"
-        holder.ingredients.text = recipe.ingredients[0].name
+        holder.calories.text = "${recipe.recipe.cookTime + recipe.recipe.prepTime} min"
+        try {
+
+            holder.ingredients.text = recipe.ingredients[0].name
+        } catch (e: Exception) {
+        }
         holder.root.setOnClickListener {
             val intent = Intent(context, DetailActivity::class.java).putExtra("recipe", recipe)
-            val options = ActivityOptionsCompat.makeSceneTransitionAnimation(context as Activity, holder.root, context.getString(R
-                .string.recipe_name))
+            val options = ActivityOptionsCompat.makeSceneTransitionAnimation(context as Activity,
+                holder.root,
+                context.getString(R.string.recipe_name))
             context.startActivity(intent, options.toBundle())
         }
     }
